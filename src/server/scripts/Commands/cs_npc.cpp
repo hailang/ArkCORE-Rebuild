@@ -86,6 +86,7 @@ public:
         { "info", SEC_ADMINISTRATOR, false, &HandleNpcInfoCommand, "", NULL },
         { "move", SEC_GAMEMASTER, false, &HandleNpcMoveCommand, "", NULL },
         { "playemote", SEC_ADMINISTRATOR, false, &HandleNpcPlayEmoteCommand, "", NULL },
+		{ "addemote", SEC_ADMINISTRATOR, false, &HandleNpcSetOrAddEmoteCommand, "", NULL },
         { "say", SEC_MODERATOR, false, &HandleNpcSayCommand, "", NULL },
         { "textemote", SEC_MODERATOR, false, &HandleNpcTextEmoteCommand, "", NULL },
         { "whisper", SEC_MODERATOR, false, &HandleNpcWhisperCommand, "", NULL },
@@ -671,6 +672,35 @@ public:
 
         target->SetUInt32Value(UNIT_NPC_EMOTESTATE, emote);
 
+        return true;
+    }
+
+static bool HandleNpcSetOrAddEmoteCommand(ChatHandler* handler, const char* args)
+    {
+        uint32 emote = atoi((char*)args);
+        if (emote > MAXIMUM_EMOTE_ID || emote < 0)
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+        uint32 guid = 0;
+        Creature* pCreature = handler->getSelectedCreature();
+        if (!pCreature)
+        {
+            handler->SendSysMessage(LANG_SELECT_CREATURE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+        else
+        {
+            guid = pCreature->GetDBTableGUIDLow();
+            PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_ADD_CREATURE_ADDON); // Add a new query or update if it is exist.
+            stmt->setUInt32(0, guid);
+            stmt->setUInt32(1, emote);
+            WorldDatabase.Execute(stmt);
+            pCreature->SetUInt32Value(UNIT_NPC_EMOTESTATE, emote);
+        }
         return true;
     }
 
