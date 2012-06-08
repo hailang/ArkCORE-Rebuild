@@ -729,7 +729,7 @@ public:
             guid = pCreature->GetDBTableGUIDLow();
             PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_ADD_CREATURE_SPAWNDIST); // Add a new query or update if it is exist.
             stmt->setUInt32(0, guid);
-            stmt->setUInt32(1, spawnDist);
+            stmt->setUInt32(1, spawnDistance);
             WorldDatabase.Execute(stmt);
         }
         return true;
