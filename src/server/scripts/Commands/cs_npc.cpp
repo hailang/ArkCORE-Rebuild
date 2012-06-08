@@ -726,9 +726,9 @@ public:
         }
         else
         {
-            creatureGUID = pCreature->GetDBTableGUIDLow();
+            guid = pCreature->GetDBTableGUIDLow();
             PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_ADD_CREATURE_SPAWNDIST); // Add a new query or update if it is exist.
-            stmt->setUInt32(0, creatureGUID);
+            stmt->setUInt32(0, guid);
             stmt->setUInt32(1, spawnDist);
             WorldDatabase.Execute(stmt);
         }
