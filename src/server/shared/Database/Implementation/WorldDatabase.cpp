@@ -47,6 +47,8 @@ void WorldDatabaseConnection::DoPrepareStatements() {
             WORLD_LOAD_SMARTAI_WP,
             "SELECT entry, pointid, position_x, position_y, position_z FROM waypoints ORDER BY entry, pointid",
             CONNECTION_SYNCH);
-	PREPARE_STATEMENT(WORLD_ADD_CREATURE_ADDON, "REPLACE INTO creature_addon (guid, emote) VALUES (?, ?)",
-			CONNECTION_ASYNC);
+    PREPARE_STATEMENT(WORLD_ADD_CREATURE_ADDON, "REPLACE INTO creature_addon (guid, emote) VALUES (?, ?)",
+            CONNECTION_ASYNC);
+    PREPARE_STATEMENT(WORLD_ADD_CREATURE_SPAWNDIST, "UPDATE creature SET spawndist = ? WHERE guid = ?",
+            CONNECTION_ASYNC);
 }

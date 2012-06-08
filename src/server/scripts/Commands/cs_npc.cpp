@@ -86,7 +86,8 @@ public:
         { "info", SEC_ADMINISTRATOR, false, &HandleNpcInfoCommand, "", NULL },
         { "move", SEC_GAMEMASTER, false, &HandleNpcMoveCommand, "", NULL },
         { "playemote", SEC_ADMINISTRATOR, false, &HandleNpcPlayEmoteCommand, "", NULL },
-		{ "addemote", SEC_ADMINISTRATOR, false, &HandleNpcSetOrAddEmoteCommand, "", NULL },
+        { "addemote", SEC_ADMINISTRATOR, false, &HandleNpcSetOrAddEmoteCommand, "", NULL },
+        { "spawndist", SEC_ADMINISTRATOR, false, &HandleNpcSetDistanceCommand, "", NULL },
         { "say", SEC_MODERATOR, false, &HandleNpcSayCommand, "", NULL },
         { "textemote", SEC_MODERATOR, false, &HandleNpcTextEmoteCommand, "", NULL },
         { "whisper", SEC_MODERATOR, false, &HandleNpcWhisperCommand, "", NULL },
@@ -675,7 +676,8 @@ public:
         return true;
     }
 
-static bool HandleNpcSetOrAddEmoteCommand(ChatHandler* handler, const char* args)
+    //Add emote to creature.
+    static bool HandleNpcSetOrAddEmoteCommand(ChatHandler* handler, const char* args)
     {
         uint32 emote = atoi((char*)args);
         if (emote > MAXIMUM_EMOTE_ID || emote < 0)
@@ -704,6 +706,34 @@ static bool HandleNpcSetOrAddEmoteCommand(ChatHandler* handler, const char* args
         return true;
     }
 
+    //Add spawn distance to crature.
+    static bool HandleNpcSetDistanceCommand(ChatHandler* handler, const char* args)
+    {
+        uint32 spawnDistance = atoi((char*)args);
+        if (spawnDistance < 0)
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+        uint32 guid = 0;
+        Creature* pCreature = handler->getSelectedCreature();
+        if (!pCreature)
+        {
+            handler->SendSysMessage(LANG_SELECT_CREATURE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+        else
+        {
+            creatureGUID = pCreature->GetDBTableGUIDLow();
+            PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_ADD_CREATURE_SPAWNDIST); // Add a new query or update if it is exist.
+            stmt->setUInt32(0, creatureGUID);
+            stmt->setUInt32(1, spawnDist);
+            WorldDatabase.Execute(stmt);
+        }
+        return true;
+    }
     //set model of creature
     static bool HandleNpcSetModelCommand (ChatHandler* handler, const char* args)
     {

@@ -31,16 +31,14 @@
 class WorldDatabaseConnection: public MySQLConnection {
 public:
 	//- Constructors for sync and async connections
-	WorldDatabaseConnection(MySQLConnectionInfo& connInfo) :
-			MySQLConnection(connInfo) {
-	}
-	WorldDatabaseConnection(ACE_Activation_Queue* q,
-			MySQLConnectionInfo& connInfo) :
-			MySQLConnection(q, connInfo) {
-	}
+    WorldDatabaseConnection(MySQLConnectionInfo& connInfo) :
+            MySQLConnection(connInfo) {}
+    WorldDatabaseConnection(ACE_Activation_Queue* q,
+            MySQLConnectionInfo& connInfo) :
+            MySQLConnection(q, connInfo) {}
 
 	//- Loads database type specific prepared statements
-	void DoPrepareStatements();
+    void DoPrepareStatements();
 };
 
 typedef DatabaseWorkerPool<WorldDatabaseConnection> WorldDatabaseWorkerPool;
@@ -52,15 +50,16 @@ enum WorldDatabaseStatements {
 	 name for a suiting suffix.
 	 */
 
-	WORLD_LOAD_QUEST_POOLS,
-	WORLD_DEL_CRELINKED_RESPAWN,
-	WORLD_REP_CRELINKED_RESPAWN,
-	WORLD_LOAD_CRETEXT,
-	WORLD_LOAD_SMART_SCRIPTS,
-	WORLD_LOAD_SMARTAI_WP,
-	WORLD_ADD_CREATURE_ADDON,
+    WORLD_LOAD_QUEST_POOLS,
+    WORLD_DEL_CRELINKED_RESPAWN,
+    WORLD_REP_CRELINKED_RESPAWN,
+    WORLD_LOAD_CRETEXT,
+    WORLD_LOAD_SMART_SCRIPTS,
+    WORLD_LOAD_SMARTAI_WP,
+    WORLD_ADD_CREATURE_ADDON,
+    WORLD_ADD_CREATURE_SPAWNDIST,
 
-	MAX_WORLDDATABASE_STATEMENTS,
+    MAX_WORLDDATABASE_STATEMENTS,
 };
 
 #endif
